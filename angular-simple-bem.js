@@ -1,5 +1,5 @@
 /*!
- * angular-simple-bem.js 0.1.0 - MIT License. https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE
+ * angular-simple-bem.js v0.1.1 - MIT License. https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE
  */
 
 angular.module('angular-simple-bem', [])
