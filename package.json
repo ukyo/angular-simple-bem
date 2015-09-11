@@ -4,7 +4,8 @@
   "description": "angular-simple-bem is a BEM library that is easy to write and easy to read.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node build.js"
   },
   "repository": {
     "type": "git",

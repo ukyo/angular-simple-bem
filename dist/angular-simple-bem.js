@@ -1,4 +1,4 @@
-/*!angular-simple-bem v0.1.2 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
+/*! angular-simple-bem v0.1.2 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
 angular.module('angular-simple-bem', [])
 
 .directive('bem', function() {
