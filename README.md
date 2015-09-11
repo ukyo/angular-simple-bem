@@ -19,7 +19,7 @@ npm install --save angular-simple-bem
 ```
 
 ```js
-angular.module('your-module', [require('angular-simple-gem')]);
+angular.module('your-module', [require('angular-simple-bem')]);
 ```
 
 
