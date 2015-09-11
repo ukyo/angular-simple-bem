@@ -8,6 +8,10 @@ angular-simple-bem is a BEM library that is easy to write and easy to read.
 bower install --save angular-simple-bem
 ```
 
+```js
+angular.module('your-module', ['angular-simple-bem']);
+```
+
 or
 
 ```
@@ -15,8 +19,9 @@ npm install --save angular-simple-bem
 ```
 
 ```js
-angular.module('your-module', ['angular-simple-bem']);
+angular.module('your-module', [require('angular-simple-gem')]);
 ```
+
 
 # Usage
 
