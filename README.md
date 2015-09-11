@@ -2,10 +2,14 @@
 
 angular-simple-bem is a BEM library that is easy to write and easy to read.
 
-# Install
+# Install and Setup
 
 ```
 bower install --save angular-simple-bem
+```
+
+```js
+angular.module('your-module', ['angular-simple-bem']);
 ```
 
 # Usage
@@ -44,7 +48,7 @@ Example: http://plnkr.co/edit/upFcR8fMcbPaHsERhO7l?p=preview
 </div>
 ```
 
-## Modifier with binding
+## Modifier with Binding
 
 ```html
 <div ng-init="foo = true; bar = false;">
