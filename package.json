@@ -1,0 +1,26 @@
+{
+  "name": "angular-simple-bem",
+  "version": "0.1.2",
+  "description": "angular-simple-bem is a BEM library that is easy to write and easy to read.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ukyo/angular-simple-bem.git"
+  },
+  "keywords": [
+    "angular",
+    "bem"
+  ],
+  "author": "ukyo <ukyo.web@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ukyo/angular-simple-bem/issues"
+  },
+  "homepage": "https://github.com/ukyo/angular-simple-bem",
+  "dependencies": {
+    "angular": ">1.3"
+  }
+}

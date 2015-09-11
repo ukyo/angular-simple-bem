@@ -1,6 +1,6 @@
 {
   "name": "angular-simple-bem",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/ukyo/angular-simple-bem",
   "authors": [
     "ukyo <ukyo.web@gmail.com>"
@@ -9,7 +9,7 @@
     "angular": ">1.3"
   },
   "description": "A BEM library that is easy to write and easy to read.",
-  "main": "angular-simple-bem.js",
+  "main": "dist/angular-simple-bem.js",
   "moduleType": "globals",
   "keywords": [
     "angular",

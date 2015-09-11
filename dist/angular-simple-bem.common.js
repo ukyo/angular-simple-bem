@@ -1,8 +1,5 @@
-/*!
- * angular-simple-bem.js v0.1.1 - MIT License. https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE
- */
-
-angular.module('angular-simple-bem', [])
+/*!angular-simple-bem v0.1.2 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
+var angular = require("angular");angular.module('angular-simple-bem', [])
 
 .directive('bem', function() {
   'use strict';
