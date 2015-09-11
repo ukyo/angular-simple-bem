@@ -1,4 +1,4 @@
-/*! angular-simple-bem v0.1.2 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
+/*! angular-simple-bem v0.1.3 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
 angular.module('angular-simple-bem', [])
 
 .directive('bem', function() {
@@ -7,7 +7,7 @@ angular.module('angular-simple-bem', [])
   var BASE_DEFINITION = '$angular-simple-bem-base-definition';
 
   function getParentDefinition(el) {
-    return el.parent().data(BASE_DEFINITION) || getParentDefinition(parent);
+    return el.parent().data(BASE_DEFINITION) || getParentDefinition(el.parent());
   }
 
   function filterRawModifier(m) {

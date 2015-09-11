@@ -6,7 +6,7 @@ angular.module('angular-simple-bem', [])
   var BASE_DEFINITION = '$angular-simple-bem-base-definition';
 
   function getParentDefinition(el) {
-    return el.parent().data(BASE_DEFINITION) || getParentDefinition(parent);
+    return el.parent().data(BASE_DEFINITION) || getParentDefinition(el.parent());
   }
 
   function filterRawModifier(m) {
