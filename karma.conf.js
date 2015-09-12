@@ -20,8 +20,8 @@ module.exports = function(config) {
       'node_modules/jquery/dist/jquery.js',
       'node_modules/angular/angular.js',
       'node_modules/angular-mocks/angular-mocks.js',
-      'src/angular-simple-bem.js',
-      'test/test.js'
+      'src/angular-simple-bem.es6',
+      'test/test.es6'
     ],
 
 
@@ -33,10 +33,18 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      '{src,test}/*.js': ['espower'],
-      '{src,test}/*.js': ['sourcemap', 'espower']
+      '{src,test}/*.es6': ['babel']
     },
 
+    babelPreprocessor: {
+      options: {
+        sourceMap: 'inline',
+        plugins: [
+          'babel-plugin-espower'
+        ]
+      }
+
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
