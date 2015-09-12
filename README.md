@@ -77,8 +77,8 @@ angular.module('your-module', [require('angular-simple-bem')]);
 
 ```html
 <div ng-init="foo = {mod1: true}; bar = true;">
-  <div bem="block--(foo)">modifier with binding</div>
-  <div bem="block--::{mod2: bar}">modifier with one time binding</div>
+  <div bem="block--(foo)">modifier with expression</div>
+  <div bem="block--::{mod2: bar}">modifier with expression(one time binding)</div>
 </div>
 ```
 
