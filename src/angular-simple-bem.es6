@@ -81,7 +81,7 @@ angular.module('angular-simple-bem', [])
   return {
     restrict: 'A',
     compile: (tElement, tAttr) => {
-      var match, be, m, modifiers, rawModifiers, boolModifiers, cs, oneTimeBinding;
+      var match, be, m, modifiers, rawModifiers, boolModifiers, cs, oneTimeBinding, expr;
 
       match = tAttr.bem.trim().match(/^([\s\S]*?)(?:--(::)?([\s\S]*))?$/);
       if (!match) throw new Error('bem: invalid pattern');
@@ -91,17 +91,24 @@ angular.module('angular-simple-bem', [])
 
       if (/^__/.test(be)) be = getParentDefinition(tElement) + be;
       tElement.data(BASE_DEFINITION, be);
-
-      modifiers = m ? parse(m) : [];
-      rawModifiers = modifiers.filter(filterRawModifier);
-      boolModifiers = modifiers.filter(filterBoolModifier);
+      tElement.addClass(be);
 
       cs = concatString.bind(null, be + '--');
-      tElement.addClass([be, ...rawModifiers.map(m => m.key).map(cs)].join(' '));
+      if (/^\([\s\S]+\)$/.test(m)) {
+        expr = oneTimeBinding + m.slice(1, -1);
+      } else if (/^\{[\s\S]+\}$/.test(m)) {
+        expr = oneTimeBinding + m;
+      } else {
+        modifiers = m ? parse(m) : [];
+        rawModifiers = modifiers.filter(filterRawModifier);
+        boolModifiers = modifiers.filter(filterBoolModifier);
+        tElement.addClass(rawModifiers.map(m => cs(m.key)).join(' '));
+        expr = `${oneTimeBinding}{${boolModifiers.map(({key, value}) => `'${key}':${value}`).join()}}`;
+      }
 
       return function bemLink(scope, element) {
-        scope.$watch(`${oneTimeBinding}{${boolModifiers.map(({key, value}) => `'${cs(key)}':${value}`).join()}}`, function bemWatchAction(newValue) {
-          angular.forEach(newValue, (v, k) => element.toggleClass(k, !!v));
+        scope.$watch(expr, function bemWatchAction(newValue) {
+          angular.forEach(newValue, (v, k) => element.toggleClass(cs(k), !!v));
         }, true);
       };
     }

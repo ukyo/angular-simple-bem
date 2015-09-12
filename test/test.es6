@@ -124,21 +124,80 @@ describe('angular-simple-bem tests', function() {
 
     it('can has modifiers with one time binding', () => {
       $scope.foo = true;
+      $scope.bar = undefined;
+
       var el = compile(`
         <div bem="block--::mod:foo">
-          <div bem="__el1--::mod:!foo"></div>
+          <div bem="__el1--::mod:bar"></div>
         </div>
       `);
       $scope.$digest();
 
       assert(el.find('[bem="block--::mod:foo"]').hasClass('block block--mod'));
-      assert(el.find('[bem="__el1--::mod:!foo"]').hasClass('block__el1'));
+      assert(el.find('[bem="__el1--::mod:bar"]').hasClass('block__el1'));
 
       $scope.foo = false;
+      $scope.bar = true
       $scope.$digest();
 
       assert(el.find('[bem="block--::mod:foo"]').hasClass('block block--mod'));
-      assert(el.find('[bem="__el1--::mod:!foo"]').hasClass('block__el1'));
+      assert(el.find('[bem="__el1--::mod:bar"]').hasClass('block__el1 block__el1--mod'));
+
+      $scope.bar = false
+      $scope.$digest();
+
+      assert(el.find('[bem="__el1--::mod:bar"]').hasClass('block__el1 block__el1--mod'));
+    });
+
+    it('can has expressions', () => {
+      $scope.foo = {mod: true};
+      $scope.bar = false;
+      var el = compile(`
+        <div bem="block--(foo)">
+          <div bem="__el1--({mod: bar})"></div>
+        </div>
+      `);
+      $scope.$digest();
+
+      assert(el.find('[bem="block--(foo)"]').hasClass('block block--mod'));
+      assert(el.find('[bem="__el1--({mod: bar})"]').hasClass('block__el1'));
+
+      $scope.foo.mod = false;
+      $scope.bar = true;
+      $scope.$digest();
+
+      assert(el.find('[bem="block--(foo)"]').hasClass('block'));
+      assert(el.find('[bem="__el1--({mod: bar})"]').hasClass('block__el1 block__el1--mod'));
+    });
+
+    it('can has expressions with one time binding', () => {
+      $scope.foo = {mod: true};
+      $scope.bar = undefined;
+      var el = compile(`
+        <div bem="block--::(foo)">
+          <div bem="__el1--::({mod: bar})"></div>
+          <div bem="__el1--::{mod: bar}"></div>
+        </div>
+      `);
+      $scope.$digest();
+
+      assert(el.find('[bem="block--::(foo)"]').hasClass('block block--mod'));
+      assert(el.find('[bem="__el1--::({mod: bar})"]').hasClass('block__el1'));
+      assert(el.find('[bem="__el1--::{mod: bar}"]').hasClass('block__el1'));
+
+      $scope.foo.mod = false;
+      $scope.bar = true;
+      $scope.$digest();
+
+      assert(el.find('[bem="block--::(foo)"]').hasClass('block block--mod'));
+      assert(el.find('[bem="__el1--::({mod: bar})"]').hasClass('block__el1 block__el1--mod'));
+      assert(el.find('[bem="__el1--::{mod: bar}"]').hasClass('block__el1 block__el1--mod'));
+
+      $scope.bar = false;
+      $scope.$digest();
+
+      assert(el.find('[bem="__el1--::({mod: bar})"]').hasClass('block__el1 block__el1--mod'));
+      assert(el.find('[bem="__el1--::{mod: bar}"]').hasClass('block__el1 block__el1--mod'));
     });
   });
 });

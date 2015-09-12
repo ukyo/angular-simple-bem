@@ -1,10 +1,8 @@
-/*! angular-simple-bem v0.1.4 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
+/*! angular-simple-bem v0.2.0 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
 (function(){
 'use strict';
 
 var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
 angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', function () {
   var pairs = {
@@ -108,7 +106,7 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
   return {
     restrict: 'A',
     compile: function compile(tElement, tAttr) {
-      var match, be, m, modifiers, rawModifiers, boolModifiers, cs, oneTimeBinding;
+      var match, be, m, modifiers, rawModifiers, boolModifiers, cs, oneTimeBinding, expr;
 
       match = tAttr.bem.trim().match(/^([\s\S]*?)(?:--(::)?([\s\S]*))?$/);
       if (!match) throw new Error('bem: invalid pattern');
@@ -127,24 +125,31 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
 
       if (/^__/.test(be)) be = getParentDefinition(tElement) + be;
       tElement.data(BASE_DEFINITION, be);
-
-      modifiers = m ? parse(m) : [];
-      rawModifiers = modifiers.filter(filterRawModifier);
-      boolModifiers = modifiers.filter(filterBoolModifier);
+      tElement.addClass(be);
 
       cs = concatString.bind(null, be + '--');
-      tElement.addClass([be].concat(_toConsumableArray(rawModifiers.map(function (m) {
-        return m.key;
-      }).map(cs))).join(' '));
-
-      return function bemLink(scope, element) {
-        scope.$watch(oneTimeBinding + '{' + boolModifiers.map(function (_ref) {
+      if (/^\([\s\S]+\)$/.test(m)) {
+        expr = oneTimeBinding + m.slice(1, -1);
+      } else if (/^\{[\s\S]+\}$/.test(m)) {
+        expr = oneTimeBinding + m;
+      } else {
+        modifiers = m ? parse(m) : [];
+        rawModifiers = modifiers.filter(filterRawModifier);
+        boolModifiers = modifiers.filter(filterBoolModifier);
+        tElement.addClass(rawModifiers.map(function (m) {
+          return cs(m.key);
+        }).join(' '));
+        expr = oneTimeBinding + '{' + boolModifiers.map(function (_ref) {
           var key = _ref.key;
           var value = _ref.value;
-          return '\'' + cs(key) + '\':' + value;
-        }).join() + '}', function bemWatchAction(newValue) {
+          return '\'' + key + '\':' + value;
+        }).join() + '}';
+      }
+
+      return function bemLink(scope, element) {
+        scope.$watch(expr, function bemWatchAction(newValue) {
           angular.forEach(newValue, function (v, k) {
-            return element.toggleClass(k, !!v);
+            return element.toggleClass(cs(k), !!v);
           });
         }, true);
       };

@@ -25,8 +25,6 @@ angular.module('your-module', [require('angular-simple-bem')]);
 
 # Usage
 
-Example: http://plnkr.co/edit/upFcR8fMcbPaHsERhO7l?p=preview
-
 ## Nest block or element
 
 ```html
@@ -72,6 +70,22 @@ Example: http://plnkr.co/edit/upFcR8fMcbPaHsERhO7l?p=preview
 <div ng-init="foo = true; bar = false;">
   <div bem="block--mod1:foo,mod2:bar" class="block block--mod1">modifier with binding</div>
   <div bem="block--::mod1:foo,mod2:bar" class="block block--mod1">modifier with one time binding</div>
+</div>
+```
+
+## Modifier with Expression
+
+```html
+<div ng-init="foo = {mod1: true}; bar = true;">
+  <div bem="block--(foo)">modifier with binding</div>
+  <div bem="block--::{mod2: bar}">modifier with one time binding</div>
+</div>
+```
+
+```html
+<div ng-init="foo = {mod1: true}; bar = true;">
+  <div bem="block--(foo)" class="block block--mod1">modifier with expression</div>
+  <div bem="block--::{mod2: bar}" class="block block--mod2">modifier with expression(one time binding)</div>
 </div>
 ```
 
