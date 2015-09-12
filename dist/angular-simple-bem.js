@@ -51,7 +51,7 @@ angular.module('angular-simple-bem', [])
       return function bemLink(scope, element) {
         scope.$watch(oneTimeBinding + '{' + boolModifiers.map(cs).map(stringifyKey).join() + '}', function bemWatchAction(newValue) {
           angular.forEach(newValue, function(v, k) {
-            element.toggleClass(k, v);
+            element.toggleClass(k, !!v);
           });
         }, true);
       };
