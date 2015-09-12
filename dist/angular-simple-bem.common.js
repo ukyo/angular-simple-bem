@@ -1,4 +1,4 @@
-/*! angular-simple-bem v0.1.3 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
+/*! angular-simple-bem v0.1.4 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
 var angular = require("angular");
 'use strict';
 
