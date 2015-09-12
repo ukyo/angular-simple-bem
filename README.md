@@ -1,4 +1,4 @@
-# angular-simple-bem
+# angular-simple-bem [![Build Status](https://travis-ci.org/ukyo/angular-simple-bem.svg?branch=master)](https://travis-ci.org/ukyo/angular-simple-bem)
 
 angular-simple-bem is a BEM library that is easy to write and easy to read.
 
