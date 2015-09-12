@@ -30,7 +30,7 @@ angular.module('angular-simple-bem', [])
   return {
     restrict: 'A',
     compile: function(tElement, tAttr) {
-      var match, blockOrElement, be, m, modifiers, rawModifiers, boolModifiers, cs, oneTimeBinding;
+      var match, be, m, modifiers, rawModifiers, boolModifiers, cs, oneTimeBinding;
 
       match = tAttr.bem.trim().match(/^([\s\S]*?)(?:--(::)?([\s\S]*))?$/);
       if (!match) throw new Error('bem: invalid pattern');
@@ -38,15 +38,15 @@ angular.module('angular-simple-bem', [])
       m = (match[3] || '').trim();
       oneTimeBinding = match[2] || '';
 
-      blockOrElement = /^__/.test(be) ? getParentDefinition(tElement) + be : be;
-      tElement.data(BASE_DEFINITION, blockOrElement);
+      if (/^__/.test(be)) be = getParentDefinition(tElement) + be;
+      tElement.data(BASE_DEFINITION, be);
 
       modifiers = m ? m.split(/\s*,\s*/) : [];
       rawModifiers = modifiers.filter(filterRawModifier);
       boolModifiers = modifiers.filter(filterBoolModifier);
 
-      cs = concatString.bind(null, blockOrElement + '--');
-      tElement.addClass([blockOrElement].concat(rawModifiers.map(cs)).join(' '));
+      cs = concatString.bind(null, be + '--');
+      tElement.addClass([be].concat(rawModifiers.map(cs)).join(' '));
 
       return function bemLink(scope, element) {
         scope.$watch(oneTimeBinding + '{' + boolModifiers.map(cs).map(stringifyKey).join() + '}', function bemWatchAction(newValue) {
