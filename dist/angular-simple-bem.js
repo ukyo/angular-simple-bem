@@ -1,4 +1,4 @@
-/*! angular-simple-bem v0.2.1 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
+/*! angular-simple-bem v0.3.0 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
 (function(){
 'use strict';
 
@@ -73,7 +73,7 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
 
     return results;
   };
-}).directive('bem', ['$angularSimpleBemParse', function (parse) {
+}).directive('bem', ['$angularSimpleBemParse', '$animate', function (parse, $animate) {
   var BASE_DEFINITION = '$angular-simple-bem-base-definition';
   var getParentDefinition = function getParentDefinition(_x) {
     var _left;
@@ -139,7 +139,7 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
         tElement.addClass(rawModifiers.map(function (m) {
           return cs(m.key);
         }).join(' '));
-        expr = '{' + boolModifiers.map(function (_ref) {
+        if (boolModifiers.length) expr = '{' + boolModifiers.map(function (_ref) {
           var key = _ref.key;
           var value = _ref.value;
           return '\'' + key + '\':' + value;
@@ -147,11 +147,30 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
       }
 
       return function bemLink(scope, element) {
+        var oldValue, toAdd, toRemove;
         if (!expr) return;
         scope.$watch(oneTimeBinding + expr, function bemWatchAction(newValue) {
-          angular.forEach(newValue, function (v, k) {
-            return element.toggleClass(cs(k), !!v);
-          });
+          if (!oldValue) {
+            toAdd = [];
+            oldValue = {};
+            angular.forEach(newValue, function (v, k) {
+              v = !!v;
+              oldValue[k] = v;
+              v && toAdd.push(cs(k));
+            });
+            toAdd.length && element.addClass(toAdd.join(' '));
+          } else {
+            toAdd = [];
+            toRemove = [];
+            angular.forEach(newValue, function (v, k) {
+              v = !!v;
+              if (oldValue[k] === v) return;
+              oldValue[k] = v;
+              (v ? toAdd : toRemove).push(cs(k));
+            });
+            toAdd.length && $animate.addClass(element, toAdd.join(' '));
+            toRemove.length && $animate.removeClass(element, toRemove.join(' '));
+          }
         }, true);
       };
     }

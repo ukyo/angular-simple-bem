@@ -71,7 +71,7 @@ angular.module('angular-simple-bem', [])
   };
 })
 
-.directive('bem', ['$angularSimpleBemParse', parse => {
+.directive('bem', ['$angularSimpleBemParse', '$animate', (parse, $animate) => {
   var BASE_DEFINITION = '$angular-simple-bem-base-definition';
   var getParentDefinition = el => el.parent().data(BASE_DEFINITION) || getParentDefinition(el.parent());
   var filterBoolModifier = m => m.value;
@@ -103,13 +103,34 @@ angular.module('angular-simple-bem', [])
         rawModifiers = modifiers.filter(filterRawModifier);
         boolModifiers = modifiers.filter(filterBoolModifier);
         tElement.addClass(rawModifiers.map(m => cs(m.key)).join(' '));
-        expr = `{${boolModifiers.map(({key, value}) => `'${key}':${value}`).join()}}`;
+        if (boolModifiers.length) expr = `{${boolModifiers.map(({key, value}) => `'${key}':${value}`).join()}}`;
       }
 
       return function bemLink(scope, element) {
+        var oldValue, toAdd, toRemove;
         if (!expr) return;
         scope.$watch(oneTimeBinding + expr, function bemWatchAction(newValue) {
-          angular.forEach(newValue, (v, k) => element.toggleClass(cs(k), !!v));
+          if (!oldValue) {
+            toAdd = [];
+            oldValue = {};
+            angular.forEach(newValue, (v, k) => {
+              v = !!v;
+              oldValue[k] = v;
+              v && toAdd.push(cs(k));
+            });
+            toAdd.length && element.addClass(toAdd.join(' '));
+          } else {
+            toAdd = [];
+            toRemove = [];
+            angular.forEach(newValue, (v, k) => {
+              v = !!v;
+              if (oldValue[k] === v) return;
+              oldValue[k] = v;
+              (v ? toAdd : toRemove).push(cs(k));
+            });
+            toAdd.length && $animate.addClass(element, toAdd.join(' '));
+            toRemove.length && $animate.removeClass(element, toRemove.join(' '));
+          }
         }, true);
       };
     }
