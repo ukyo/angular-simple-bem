@@ -1,4 +1,4 @@
-/*! angular-simple-bem v0.2.0 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
+/*! angular-simple-bem v0.2.1 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
 (function(){
 'use strict';
 
@@ -129,9 +129,9 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
 
       cs = concatString.bind(null, be + '--');
       if (/^\([\s\S]+\)$/.test(m)) {
-        expr = oneTimeBinding + m.slice(1, -1);
+        expr = m.slice(1, -1);
       } else if (/^\{[\s\S]+\}$/.test(m)) {
-        expr = oneTimeBinding + m;
+        expr = m;
       } else {
         modifiers = m ? parse(m) : [];
         rawModifiers = modifiers.filter(filterRawModifier);
@@ -139,7 +139,7 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
         tElement.addClass(rawModifiers.map(function (m) {
           return cs(m.key);
         }).join(' '));
-        expr = oneTimeBinding + '{' + boolModifiers.map(function (_ref) {
+        expr = '{' + boolModifiers.map(function (_ref) {
           var key = _ref.key;
           var value = _ref.value;
           return '\'' + key + '\':' + value;
@@ -147,7 +147,8 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
       }
 
       return function bemLink(scope, element) {
-        scope.$watch(expr, function bemWatchAction(newValue) {
+        if (!expr) return;
+        scope.$watch(oneTimeBinding + expr, function bemWatchAction(newValue) {
           angular.forEach(newValue, function (v, k) {
             return element.toggleClass(cs(k), !!v);
           });

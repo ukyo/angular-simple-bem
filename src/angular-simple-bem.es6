@@ -95,19 +95,20 @@ angular.module('angular-simple-bem', [])
 
       cs = concatString.bind(null, be + '--');
       if (/^\([\s\S]+\)$/.test(m)) {
-        expr = oneTimeBinding + m.slice(1, -1);
+        expr = m.slice(1, -1);
       } else if (/^\{[\s\S]+\}$/.test(m)) {
-        expr = oneTimeBinding + m;
+        expr = m;
       } else {
         modifiers = m ? parse(m) : [];
         rawModifiers = modifiers.filter(filterRawModifier);
         boolModifiers = modifiers.filter(filterBoolModifier);
         tElement.addClass(rawModifiers.map(m => cs(m.key)).join(' '));
-        expr = `${oneTimeBinding}{${boolModifiers.map(({key, value}) => `'${key}':${value}`).join()}}`;
+        expr = `{${boolModifiers.map(({key, value}) => `'${key}':${value}`).join()}}`;
       }
 
       return function bemLink(scope, element) {
-        scope.$watch(expr, function bemWatchAction(newValue) {
+        if (!expr) return;
+        scope.$watch(oneTimeBinding + expr, function bemWatchAction(newValue) {
           angular.forEach(newValue, (v, k) => element.toggleClass(cs(k), !!v));
         }, true);
       };
