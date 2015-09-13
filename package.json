@@ -1,11 +1,11 @@
 {
   "name": "angular-simple-bem",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "angular-simple-bem is a BEM library that is easy to write and easy to read.",
   "main": "index.js",
   "scripts": {
     "test": "karma start --single-run",
-    "watch": "karma start",
+    "start": "karma start",
     "build": "node build.js"
   },
   "repository": {
