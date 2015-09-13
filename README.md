@@ -89,6 +89,10 @@ angular.module('your-module', [require('angular-simple-bem')]);
 </div>
 ```
 
+## Animation
+
+angular-simple-bem supports `add`, `remove`. See [AngularJS: API: ngAnimate](https://docs.angularjs.org/api/ngAnimate).
+
 # License
 
 MIT License
