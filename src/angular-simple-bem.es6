@@ -80,6 +80,7 @@ angular.module('angular-simple-bem', [])
 
   return {
     restrict: 'A',
+    priority: 10000,
     compile: (tElement, tAttr) => {
       var match, be, m, modifiers, rawModifiers, boolModifiers, cs, oneTimeBinding, expr;
 
