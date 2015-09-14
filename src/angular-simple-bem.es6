@@ -84,36 +84,35 @@ angular.module('angular-simple-bem', [])
 
   return {
     restrict: 'A',
-    priority: 10000,
-    compile: (tElement, tAttr) => {
-      var match, be, m, modifiers, rawModifiers, boolModifiers, cs, oneTimeBinding, expr;
+    link: {
+      pre(scope, element, attr) {
+        var match, be, m, modifiers, rawModifiers, boolModifiers, cs, oneTimeBinding, expr;
 
-      match = tAttr.bem.trim().match(/^([\s\S]*?)(?:--(::)?([\s\S]*))?$/);
-      if (!match) throw new Error('bem: invalid pattern');
-      [, be, oneTimeBinding = '', m = ''] = match;
-      be = be.trim();
-      m = m.trim();
+        match = attr.bem.trim().match(/^([\s\S]*?)(?:--(::)?([\s\S]*))?$/);
+        if (!match) throw new Error('bem: invalid pattern');
+        [, be, oneTimeBinding = '', m = ''] = match;
+        be = be.trim();
+        m = m.trim();
 
-      if (/^__/.test(be)) be = getParentDefinition(tElement) + be;
-      tElement.data(BASE_DEFINITION, be);
-      tElement.addClass(be);
+        if (/^__/.test(be)) be = getParentDefinition(element) + be;
+        element.data(BASE_DEFINITION, be);
+        element.addClass(be);
 
-      cs = concatString.bind(null, be + '--');
-      if (/^\([\s\S]+\)$/.test(m)) {
-        expr = m.slice(1, -1);
-      } else if (/^\{[\s\S]+\}$/.test(m)) {
-        expr = m;
-      } else {
-        modifiers = m ? parse(m) : [];
-        rawModifiers = modifiers.filter(filterRawModifier);
-        boolModifiers = modifiers.filter(filterBoolModifier);
-        tElement.addClass(rawModifiers.map(m => cs(m.key)).join(' '));
-        if (boolModifiers.length) expr = `{${boolModifiers.map(({key, value}) => `'${key}':${value}`).join()}}`;
-      }
+        cs = concatString.bind(null, be + '--');
+        if (/^\([\s\S]+\)$/.test(m)) {
+          expr = m.slice(1, -1);
+        } else if (/^\{[\s\S]+\}$/.test(m)) {
+          expr = m;
+        } else {
+          modifiers = m ? parse(m) : [];
+          rawModifiers = modifiers.filter(filterRawModifier);
+          boolModifiers = modifiers.filter(filterBoolModifier);
+          element.addClass(rawModifiers.map(m => cs(m.key)).join(' '));
+          if (boolModifiers.length) expr = `{${boolModifiers.map(({key, value}) => `'${key}':${value}`).join()}}`;
+        }
 
-      return function bemLink(scope, element) {
-        var oldValue, toAdd, toRemove;
         if (!expr) return;
+        var oldValue, toAdd, toRemove;
         scope.$watch(oneTimeBinding + expr, function bemWatchAction(newValue) {
           if (!oldValue) {
             toAdd = [];
@@ -137,7 +136,7 @@ angular.module('angular-simple-bem', [])
             toRemove.length && $animate.removeClass(element, toRemove.join(' '));
           }
         }, true);
-      };
+      }
     }
   };
 }]);

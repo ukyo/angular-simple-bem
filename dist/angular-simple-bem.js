@@ -1,4 +1,4 @@
-/*! angular-simple-bem v0.3.1 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
+/*! angular-simple-bem v0.3.2 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
 (function(){
 'use strict';
 
@@ -109,51 +109,50 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
 
   return {
     restrict: 'A',
-    priority: 10000,
-    compile: function compile(tElement, tAttr) {
-      var match, be, m, modifiers, rawModifiers, boolModifiers, cs, oneTimeBinding, expr;
+    link: {
+      pre: function pre(scope, element, attr) {
+        var match, be, m, modifiers, rawModifiers, boolModifiers, cs, oneTimeBinding, expr;
 
-      match = tAttr.bem.trim().match(/^([\s\S]*?)(?:--(::)?([\s\S]*))?$/);
-      if (!match) throw new Error('bem: invalid pattern');
-      var _match = match;
+        match = attr.bem.trim().match(/^([\s\S]*?)(?:--(::)?([\s\S]*))?$/);
+        if (!match) throw new Error('bem: invalid pattern');
+        var _match = match;
 
-      var _match2 = _slicedToArray(_match, 4);
+        var _match2 = _slicedToArray(_match, 4);
 
-      be = _match2[1];
-      var _match2$2 = _match2[2];
-      oneTimeBinding = _match2$2 === undefined ? '' : _match2$2;
-      var _match2$3 = _match2[3];
-      m = _match2$3 === undefined ? '' : _match2$3;
+        be = _match2[1];
+        var _match2$2 = _match2[2];
+        oneTimeBinding = _match2$2 === undefined ? '' : _match2$2;
+        var _match2$3 = _match2[3];
+        m = _match2$3 === undefined ? '' : _match2$3;
 
-      be = be.trim();
-      m = m.trim();
+        be = be.trim();
+        m = m.trim();
 
-      if (/^__/.test(be)) be = getParentDefinition(tElement) + be;
-      tElement.data(BASE_DEFINITION, be);
-      tElement.addClass(be);
+        if (/^__/.test(be)) be = getParentDefinition(element) + be;
+        element.data(BASE_DEFINITION, be);
+        element.addClass(be);
 
-      cs = concatString.bind(null, be + '--');
-      if (/^\([\s\S]+\)$/.test(m)) {
-        expr = m.slice(1, -1);
-      } else if (/^\{[\s\S]+\}$/.test(m)) {
-        expr = m;
-      } else {
-        modifiers = m ? parse(m) : [];
-        rawModifiers = modifiers.filter(filterRawModifier);
-        boolModifiers = modifiers.filter(filterBoolModifier);
-        tElement.addClass(rawModifiers.map(function (m) {
-          return cs(m.key);
-        }).join(' '));
-        if (boolModifiers.length) expr = '{' + boolModifiers.map(function (_ref) {
-          var key = _ref.key;
-          var value = _ref.value;
-          return '\'' + key + '\':' + value;
-        }).join() + '}';
-      }
+        cs = concatString.bind(null, be + '--');
+        if (/^\([\s\S]+\)$/.test(m)) {
+          expr = m.slice(1, -1);
+        } else if (/^\{[\s\S]+\}$/.test(m)) {
+          expr = m;
+        } else {
+          modifiers = m ? parse(m) : [];
+          rawModifiers = modifiers.filter(filterRawModifier);
+          boolModifiers = modifiers.filter(filterBoolModifier);
+          element.addClass(rawModifiers.map(function (m) {
+            return cs(m.key);
+          }).join(' '));
+          if (boolModifiers.length) expr = '{' + boolModifiers.map(function (_ref) {
+            var key = _ref.key;
+            var value = _ref.value;
+            return '\'' + key + '\':' + value;
+          }).join() + '}';
+        }
 
-      return function bemLink(scope, element) {
-        var oldValue, toAdd, toRemove;
         if (!expr) return;
+        var oldValue, toAdd, toRemove;
         scope.$watch(oneTimeBinding + expr, function bemWatchAction(newValue) {
           if (!oldValue) {
             toAdd = [];
@@ -177,7 +176,7 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
             toRemove.length && $animate.removeClass(element, toRemove.join(' '));
           }
         }, true);
-      };
+      }
     }
   };
 }]);
