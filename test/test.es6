@@ -78,6 +78,29 @@ describe('angular-simple-bem tests', function() {
     });
   });
 
+  describe('transclude: "element"', () => {
+
+    it('can use', () => {
+      var el = compile(`
+        <div bem="block">
+          <div bem="__el1">
+            <div bem="__el2" ng-if="foo"></div>
+          </div>
+        </div>
+      `);
+      $scope.foo = false;
+      $scope.$digest();
+
+      assert(el.find('[bem="block"]').hasClass('block'));
+      assert(el.find('[bem="__el1"]').hasClass('block__el1'));
+      assert.throws(el.find('[bem="__el2"]').hasClass('block__el1__el2'));
+
+      $scope.foo = true;
+      $scope.$digest();
+      assert(el.find('[bem="__el2"]').hasClass('block__el1__el2'));
+    });
+  });
+
   describe('modifier', () => {
     it('can has a modifier', () => {
       var el = compile(`

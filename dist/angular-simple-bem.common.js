@@ -1,4 +1,4 @@
-/*! angular-simple-bem v0.3.0 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
+/*! angular-simple-bem v0.3.1 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
 var angular = require("angular");
 'use strict';
 
@@ -82,13 +82,17 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
 
     _function: while (_again) {
       var el = _x;
+      parent = undefined;
       _again = false;
 
-      if (_left = el.parent().data(BASE_DEFINITION)) {
+      var parent = el.parent();
+      if (!parent.length) throw new Error('bem: no parent');
+
+      if (_left = parent.data(BASE_DEFINITION)) {
         return _left;
       }
 
-      _x = el.parent();
+      _x = parent;
       _again = true;
       continue _function;
     }
@@ -105,6 +109,7 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
 
   return {
     restrict: 'A',
+    priority: 10000,
     compile: function compile(tElement, tAttr) {
       var match, be, m, modifiers, rawModifiers, boolModifiers, cs, oneTimeBinding, expr;
 
