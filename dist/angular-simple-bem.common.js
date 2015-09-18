@@ -1,4 +1,4 @@
-/*! angular-simple-bem v0.3.2 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
+/*! angular-simple-bem v0.3.3 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
 var angular = require("angular");
 'use strict';
 
@@ -74,7 +74,7 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
     return results;
   };
 }).directive('bem', ['$angularSimpleBemParse', '$animate', function (parse, $animate) {
-  var BASE_DEFINITION = '$angular-simple-bem-base-definition';
+  var BASE_DEFINITION = '__bem__';
   var getParentDefinition = function getParentDefinition(_x) {
     var _left;
 
@@ -88,7 +88,7 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
       var parent = el.parent();
       if (!parent.length) throw new Error('bem: no parent');
 
-      if (_left = parent.data(BASE_DEFINITION)) {
+      if (_left = parent.attr(BASE_DEFINITION)) {
         return _left;
       }
 
@@ -128,8 +128,10 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
         be = be.trim();
         m = m.trim();
 
-        if (/^__/.test(be)) be = getParentDefinition(element) + be;
-        element.data(BASE_DEFINITION, be);
+        if (/^__/.test(be)) {
+          be = getParentDefinition(element) + be;
+        }
+        element.attr(BASE_DEFINITION, be);
         element.addClass(be);
 
         cs = concatString.bind(null, be + '--');

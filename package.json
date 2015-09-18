@@ -1,6 +1,6 @@
 {
   "name": "angular-simple-bem",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "angular-simple-bem is a BEM library that is easy to write and easy to read.",
   "main": "index.js",
   "scripts": {
