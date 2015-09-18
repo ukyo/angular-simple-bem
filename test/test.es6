@@ -92,9 +92,9 @@ describe('angular-simple-bem tests', function() {
       `);
       $scope.$digest();
 
-      assert.throws(el.find('[bem="__el1"]').hasClass('block__el1__el2'));
-      assert.throws(el.find('[bem="__el2"]').hasClass('block__el1__el2'));
-      assert.throws(el.find('[bem="__el3"]').hasClass('block__el1__el2__el3'));
+      assert(el.find('[bem="__el1"]').hasClass('block__el1'));
+      assert(el.find('[bem="__el2"]').hasClass('block__el1__el2'));
+      assert(el.find('[bem="__el3"]').hasClass('block__el1__el2__el3'));
     });
   });
 

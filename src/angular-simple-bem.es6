@@ -72,11 +72,11 @@ angular.module('angular-simple-bem', [])
 })
 
 .directive('bem', ['$angularSimpleBemParse', '$animate', (parse, $animate) => {
-  var BASE_DEFINITION = '$angular-simple-bem-base-definition';
+  var BASE_DEFINITION = '__bem__';
   var getParentDefinition = el => {
     var parent = el.parent();
     if (!parent.length) throw new Error('bem: no parent');
-    return parent.data(BASE_DEFINITION) || getParentDefinition(parent);
+    return parent.attr(BASE_DEFINITION) || getParentDefinition(parent);
   };
   var filterBoolModifier = m => m.value;
   var filterRawModifier = m => !m.value;
@@ -94,8 +94,10 @@ angular.module('angular-simple-bem', [])
         be = be.trim();
         m = m.trim();
 
-        if (/^__/.test(be)) be = getParentDefinition(element) + be;
-        element.data(BASE_DEFINITION, be);
+        if (/^__/.test(be)) {
+          be = getParentDefinition(element) + be;
+        }
+        element.attr(BASE_DEFINITION, be);
         element.addClass(be);
 
         cs = concatString.bind(null, be + '--');
