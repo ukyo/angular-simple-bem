@@ -98,7 +98,7 @@ angular.module('angular-simple-bem', [])
           be = getParentDefinition(element) + be;
         }
         element.attr(BASE_DEFINITION, be);
-        element.addClass(be);
+        attr.$addClass(be);
 
         cs = concatString.bind(null, be + '--');
         if (/^\([\s\S]+\)$/.test(m)) {
@@ -109,7 +109,7 @@ angular.module('angular-simple-bem', [])
           modifiers = m ? parse(m) : [];
           rawModifiers = modifiers.filter(filterRawModifier);
           boolModifiers = modifiers.filter(filterBoolModifier);
-          element.addClass(rawModifiers.map(m => cs(m.key)).join(' '));
+          attr.$addClass(rawModifiers.map(m => cs(m.key)).join(' '));
           if (boolModifiers.length) expr = `{${boolModifiers.map(({key, value}) => `'${key}':${value}`).join()}}`;
         }
 
@@ -124,7 +124,7 @@ angular.module('angular-simple-bem', [])
               oldValue[k] = v;
               v && toAdd.push(cs(k));
             });
-            toAdd.length && element.addClass(toAdd.join(' '));
+            toAdd.length && attr.$addClass(toAdd.join(' '));
           } else {
             toAdd = [];
             toRemove = [];

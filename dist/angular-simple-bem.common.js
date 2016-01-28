@@ -1,4 +1,4 @@
-/*! angular-simple-bem v0.3.3 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
+/*! angular-simple-bem v0.3.4 - MIT License https://github.com/ukyo/angular-simple-bem/blob/master/LICENSE */
 var angular = require("angular");
 'use strict';
 
@@ -132,7 +132,7 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
           be = getParentDefinition(element) + be;
         }
         element.attr(BASE_DEFINITION, be);
-        element.addClass(be);
+        attr.$addClass(be);
 
         cs = concatString.bind(null, be + '--');
         if (/^\([\s\S]+\)$/.test(m)) {
@@ -143,7 +143,7 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
           modifiers = m ? parse(m) : [];
           rawModifiers = modifiers.filter(filterRawModifier);
           boolModifiers = modifiers.filter(filterBoolModifier);
-          element.addClass(rawModifiers.map(function (m) {
+          attr.$addClass(rawModifiers.map(function (m) {
             return cs(m.key);
           }).join(' '));
           if (boolModifiers.length) expr = '{' + boolModifiers.map(function (_ref) {
@@ -164,7 +164,7 @@ angular.module('angular-simple-bem', []).factory('$angularSimpleBemParse', funct
               oldValue[k] = v;
               v && toAdd.push(cs(k));
             });
-            toAdd.length && element.addClass(toAdd.join(' '));
+            toAdd.length && attr.$addClass(toAdd.join(' '));
           } else {
             toAdd = [];
             toRemove = [];
